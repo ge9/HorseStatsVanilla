@@ -25,6 +25,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
+import net.minecraft.nbt.NbtCompound;
 
 @Mixin(AbstractDonkeyEntity.class)
 public abstract class AbstractDonkeyEntityMixin extends AbstractHorseEntity {
@@ -46,14 +47,23 @@ public abstract class AbstractDonkeyEntityMixin extends AbstractHorseEntity {
         if (config.showValue() && !this.isTame() && player.shouldCancelInteraction() && (config == null || config.isTooltipEnabled())) {
             // Show tooltip
             DecimalFormat df = new DecimalFormat("#.#");
-            String jumpStrength = df.format( Converter.jumpStrengthToJumpHeight(this.getAttributeValue(EntityAttributes.GENERIC_JUMP_STRENGTH)) );
+            String jumpStrength = df.format( Converter.jumpStrengthToJumpHeight(this.getAttributeValue(EntityAttributes.JUMP_STRENGTH)) );
             String maxHealth = df.format(this.getMaxHealth());
-            String strength = df.format(3L * this.getInventoryColumns());
-            String speed = df.format(Converter.genericSpeedToBlocPerSec(this.getAttributes().getValue(EntityAttributes.GENERIC_MOVEMENT_SPEED)));
+
+            NbtCompound entityNbt = new NbtCompound();
+            this.writeNbt(entityNbt);
+            int strength_int;
+            if (this.getType() == EntityType.LLAMA || this.getType() == EntityType.TRADER_LLAMA) {
+                strength_int = entityNbt.getInt("Strength");
+            }else{
+                strength_int = this.getInventoryColumns();
+            }
+            String strength = df.format(3L * strength_int);
+            String speed = df.format(Converter.genericSpeedToBlocPerSec(this.getAttributes().getValue(EntityAttributes.MOVEMENT_SPEED)));
             
             double jumpValue = new BigDecimal(jumpStrength.replace(',', '.')).doubleValue();
             double speedValue = new BigDecimal(speed.replace(',', '.')).doubleValue();
-            int healthValue = new BigDecimal(maxHealth.replace(',', '.')).intValue();
+            double healthValue = new BigDecimal(maxHealth.replace(',', '.')).doubleValue();
             int strengthValue = new BigDecimal(strength.replace(',', '.')).intValue();
 
             MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(

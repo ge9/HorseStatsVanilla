@@ -13,7 +13,7 @@ import net.minecraft.text.Text;
 public class TooltipDonkey extends LightweightGuiDescription {
     private ModConfig config;
 
-    public TooltipDonkey(double speed, double jump, int health, int strength) {
+    public TooltipDonkey(double speed, double jump, double health, int strength) {
         super();
         config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
         WBox root = new WBox(Axis.VERTICAL);

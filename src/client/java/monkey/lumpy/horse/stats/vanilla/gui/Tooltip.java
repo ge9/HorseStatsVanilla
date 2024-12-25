@@ -13,7 +13,7 @@ import net.minecraft.text.Text;
 public class Tooltip extends LightweightGuiDescription {
     private ModConfig config;
 
-    public Tooltip(double speed, double jump, int health) {
+    public Tooltip(double speed, double jump, double health) {
         super();
         config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
         WBox root = new WBox(Axis.VERTICAL);

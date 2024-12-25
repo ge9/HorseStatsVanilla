@@ -41,9 +41,9 @@ public abstract class HorseScreenMixin extends HandledScreen<HorseScreenHandler>
         if (config.showValue()) {
             boolean hasChest = AbstractDonkeyEntity.class.isAssignableFrom(this.entity.getClass()) && ((AbstractDonkeyEntity) this.entity).hasChest();
             DecimalFormat df = new DecimalFormat("#.#");
-            String jumpStrength = df.format(Converter.jumpStrengthToJumpHeight(this.entity.getAttributeValue(EntityAttributes.GENERIC_JUMP_STRENGTH)));
+            String jumpStrength = df.format(Converter.jumpStrengthToJumpHeight(this.entity.getAttributeValue(EntityAttributes.JUMP_STRENGTH)));
             String maxHealth = df.format(this.entity.getMaxHealth());
-            String speed = df.format(Converter.genericSpeedToBlocPerSec(this.entity.getAttributes().getValue(EntityAttributes.GENERIC_MOVEMENT_SPEED)));
+            String speed = df.format(Converter.genericSpeedToBlocPerSec(this.entity.getAttributes().getValue(EntityAttributes.MOVEMENT_SPEED)));
 
             // Coloring
             Color jumpColor = config.getNeutralColor();
@@ -97,8 +97,8 @@ public abstract class HorseScreenMixin extends HandledScreen<HorseScreenHandler>
                 int strength = 3 * ((LlamaEntity) this.entity).getStrength();
 
                 if(config.useColors()) {
-                    if(strength > config.getGoodHorseJumpValue()) {strengthColor = config.getGoodColor();}
-                    else if (strength < config.getBadHorseJumpValue()) {strengthColor = config.getBadColor();}
+                    if(strength > config.getGoodStrengthValue()) {strengthColor = config.getGoodColor();}
+                    else if (strength < config.getBadStrengthValue()) {strengthColor = config.getBadColor();}
                 }
                 if (!hasChest) {
                     if (config.valueUp()) {
