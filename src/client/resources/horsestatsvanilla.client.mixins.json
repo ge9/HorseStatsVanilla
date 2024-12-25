@@ -5,7 +5,8 @@
   "client": [
     "HorseScreenMixin",
     "HorseEntityMixin",
-    "AbstractDonkeyEntityMixin"
+    "AbstractDonkeyEntityMixin",
+    "PandaEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1
