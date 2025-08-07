@@ -3,6 +3,7 @@ package monkey.lumpy.horse.stats.vanilla.mixin.client;
 import com.ibm.icu.math.BigDecimal;
 import com.ibm.icu.text.DecimalFormat;
 
+import net.minecraft.storage.NbtWriteView;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -51,10 +52,11 @@ public abstract class AbstractDonkeyEntityMixin extends AbstractHorseEntity {
             String maxHealth = df.format(this.getMaxHealth());
 
             NbtCompound entityNbt = new NbtCompound();
-            this.writeNbt(entityNbt);
+            NbtWriteView writeView = NbtWriteView.create(null);
+            this.writeCustomData(writeView);
             int strength_int;
             if (this.getType() == EntityType.LLAMA || this.getType() == EntityType.TRADER_LLAMA) {
-                strength_int = entityNbt.getInt("Strength");
+                strength_int = writeView.getNbt().getInt("Strength").get();
             }else{
                 strength_int = this.getInventoryColumns();
             }
