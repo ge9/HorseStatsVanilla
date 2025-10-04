@@ -40,7 +40,7 @@ public abstract class AbstractDonkeyEntityMixin extends AbstractHorseEntity {
 
 
     @Inject(at = @At("HEAD"), method = "interactMob")
-    public ActionResult interactMob(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> ret) {
+    public void interactMob(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> ret) {
         if(config == null) {
             config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
         }
@@ -72,6 +72,5 @@ public abstract class AbstractDonkeyEntityMixin extends AbstractHorseEntity {
                 new ToolTipGui(new TooltipDonkey(speedValue, jumpValue, healthValue, strengthValue))
             ));
         }
-        return ret.getReturnValue();
     }
 }

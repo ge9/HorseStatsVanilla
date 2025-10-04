@@ -1,8 +1,5 @@
 package monkey.lumpy.horse.stats.vanilla.mixin.client;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -29,7 +26,7 @@ public abstract class PandaEntityMixin{
     public abstract PandaEntity.Gene getHiddenGene();
 
     @Inject(at = @At("HEAD"), method = "interactMob")
-    public ActionResult interactMob(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> ret) {
+    public void interactMob(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> ret) {
         if(config == null) {
             config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
         }
@@ -39,6 +36,5 @@ public abstract class PandaEntityMixin{
                     new ToolTipGui(new TooltipPanda(this.getMainGene().asString(), this.getHiddenGene().asString()))
             ));
         }
-        return ret.getReturnValue();
     }
 }
