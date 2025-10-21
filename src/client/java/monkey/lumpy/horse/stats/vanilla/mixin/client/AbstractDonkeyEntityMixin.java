@@ -3,7 +3,7 @@ package monkey.lumpy.horse.stats.vanilla.mixin.client;
 import com.ibm.icu.math.BigDecimal;
 import com.ibm.icu.text.DecimalFormat;
 
-import net.minecraft.storage.NbtWriteView;
+import net.minecraft.entity.passive.LlamaEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -26,7 +26,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
-import net.minecraft.nbt.NbtCompound;
 
 @Mixin(AbstractDonkeyEntity.class)
 public abstract class AbstractDonkeyEntityMixin extends AbstractHorseEntity {
@@ -40,7 +39,7 @@ public abstract class AbstractDonkeyEntityMixin extends AbstractHorseEntity {
 
 
     @Inject(at = @At("HEAD"), method = "interactMob")
-    public ActionResult interactMob(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> ret) {
+    public void interactMob(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> ret) {
         if(config == null) {
             config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
         }
@@ -51,12 +50,9 @@ public abstract class AbstractDonkeyEntityMixin extends AbstractHorseEntity {
             String jumpStrength = df.format( Converter.jumpStrengthToJumpHeight(this.getAttributeValue(EntityAttributes.JUMP_STRENGTH)) );
             String maxHealth = df.format(this.getMaxHealth());
 
-            NbtCompound entityNbt = new NbtCompound();
-            NbtWriteView writeView = NbtWriteView.create(null);
-            this.writeCustomData(writeView);
             int strength_int;
             if (this.getType() == EntityType.LLAMA || this.getType() == EntityType.TRADER_LLAMA) {
-                strength_int = writeView.getNbt().getInt("Strength").get();
+                strength_int = ((LlamaEntity)(Object)this).getStrength();
             }else{
                 strength_int = this.getInventoryColumns();
             }
@@ -72,6 +68,6 @@ public abstract class AbstractDonkeyEntityMixin extends AbstractHorseEntity {
                 new ToolTipGui(new TooltipDonkey(speedValue, jumpValue, healthValue, strengthValue))
             ));
         }
-        return ret.getReturnValue();
+        return;
     }
 }
