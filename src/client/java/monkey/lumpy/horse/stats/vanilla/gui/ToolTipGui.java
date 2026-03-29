@@ -2,7 +2,7 @@ package monkey.lumpy.horse.stats.vanilla.gui;
 
 import io.github.cottonmc.cotton.gui.GuiDescription;
 import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
-import net.minecraft.client.input.KeyInput;
+import net.minecraft.client.input.KeyEvent;
 
 public class ToolTipGui extends CottonClientScreen {
 
@@ -11,17 +11,17 @@ public class ToolTipGui extends CottonClientScreen {
     }
 
     @Override
-    public boolean keyPressed(KeyInput input) {
-        if(input.getKeycode() == 26) {
-            close();
+    public boolean keyPressed(KeyEvent input) {
+        if(input.input() == 26) {
+            onClose();
         }
         return super.keyPressed(input);
     }
 
     @Override
-    public boolean keyReleased(KeyInput input) {
-        if(input.getKeycode() == 50) {
-            close();
+    public boolean keyReleased(KeyEvent input) {
+        if(input.input() == 50) {
+            onClose();
         }
         return super.keyReleased(input);
     }

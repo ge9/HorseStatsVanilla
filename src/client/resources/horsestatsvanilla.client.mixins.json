@@ -3,10 +3,10 @@
   "package": "monkey.lumpy.horse.stats.vanilla.mixin.client",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "HorseScreenMixin",
-    "HorseEntityMixin",
-    "AbstractDonkeyEntityMixin",
-    "PandaEntityMixin"
+    "HorseInventoryScreenMixin",
+    "HorseMixin",
+    "AbstractChestedHorseMixin",
+    "PandaMixin"
   ],
   "injectors": {
     "defaultRequire": 1

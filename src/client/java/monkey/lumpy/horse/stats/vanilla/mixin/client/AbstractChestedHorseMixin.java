@@ -3,7 +3,7 @@ package monkey.lumpy.horse.stats.vanilla.mixin.client;
 import com.ibm.icu.math.BigDecimal;
 import com.ibm.icu.text.DecimalFormat;
 
-import net.minecraft.entity.passive.LlamaEntity;
+import net.minecraft.world.entity.animal.equine.Llama;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -17,54 +17,54 @@ import monkey.lumpy.horse.stats.vanilla.util.Converter;
 
 import org.spongepowered.asm.mixin.injection.At;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.passive.AbstractDonkeyEntity;
-import net.minecraft.entity.passive.AbstractHorseEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.animal.equine.AbstractChestedHorse;
+import net.minecraft.world.entity.animal.equine.AbstractHorse;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.level.Level;
 
-@Mixin(AbstractDonkeyEntity.class)
-public abstract class AbstractDonkeyEntityMixin extends AbstractHorseEntity {
+@Mixin(AbstractChestedHorse.class)
+public abstract class AbstractChestedHorseMixin extends AbstractHorse {
     @Shadow public abstract int getInventoryColumns();
 
     private ModConfig config;
 
-    protected AbstractDonkeyEntityMixin(EntityType<? extends AbstractHorseEntity> entityType, World world) {
+    protected AbstractChestedHorseMixin(EntityType<? extends AbstractHorse> entityType, Level world) {
         super(entityType, world);
     }
 
 
-    @Inject(at = @At("HEAD"), method = "interactMob")
-    public void interactMob(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> ret) {
+    @Inject(at = @At("HEAD"), method = "mobInteract")
+    public void interactMob(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> ret) {
         if(config == null) {
             config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
         }
 
-        if (config.showValue() && !this.isTame() && player.shouldCancelInteraction() && (config == null || config.isTooltipEnabled())) {
+        if (config.showValue() && !this.isTamed() && player.isSecondaryUseActive() && (config == null || config.isTooltipEnabled())) {
             // Show tooltip
             DecimalFormat df = new DecimalFormat("#.#");
-            String jumpStrength = df.format( Converter.jumpStrengthToJumpHeight(this.getAttributeValue(EntityAttributes.JUMP_STRENGTH)) );
+            String jumpStrength = df.format( Converter.jumpStrengthToJumpHeight(this.getAttributeValue(Attributes.JUMP_STRENGTH)) );
             String maxHealth = df.format(this.getMaxHealth());
 
             int strength_int;
             if (this.getType() == EntityType.LLAMA || this.getType() == EntityType.TRADER_LLAMA) {
-                strength_int = ((LlamaEntity)(Object)this).getStrength();
+                strength_int = ((Llama)(Object)this).getStrength();
             }else{
                 strength_int = this.getInventoryColumns();
             }
             String strength = df.format(3L * strength_int);
-            String speed = df.format(Converter.genericSpeedToBlocPerSec(this.getAttributes().getValue(EntityAttributes.MOVEMENT_SPEED)));
+            String speed = df.format(Converter.genericSpeedToBlocPerSec(this.getAttributes().getValue(Attributes.MOVEMENT_SPEED)));
             
             double jumpValue = new BigDecimal(jumpStrength.replace(',', '.')).doubleValue();
             double speedValue = new BigDecimal(speed.replace(',', '.')).doubleValue();
             double healthValue = new BigDecimal(maxHealth.replace(',', '.')).doubleValue();
             int strengthValue = new BigDecimal(strength.replace(',', '.')).intValue();
 
-            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(
+            Minecraft.getInstance().execute(() -> Minecraft.getInstance().setScreen(
                 new ToolTipGui(new TooltipDonkey(speedValue, jumpValue, healthValue, strengthValue))
             ));
         }

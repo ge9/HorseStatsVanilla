@@ -8,7 +8,7 @@ import io.github.cottonmc.cotton.gui.widget.data.Insets;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.math.Color;
 import monkey.lumpy.horse.stats.vanilla.config.ModConfig;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 
 public class TooltipPanda extends LightweightGuiDescription {
     private ModConfig config;
@@ -25,10 +25,10 @@ public class TooltipPanda extends LightweightGuiDescription {
         Color mainColor = config.getNeutralColor();
         Color hiddenColor = config.getNeutralColor();
 
-        WLabel mainSymbol = new WLabel(Text.literal("[main]"), mainColor.hashCode());
-        WLabel mainLabel = new WLabel(Text.literal(main), mainColor.hashCode());
-        WLabel hiddenSymbol = new WLabel(Text.literal("[hidden]"), hiddenColor.hashCode());
-        WLabel hiddenLabel = new WLabel(Text.literal(hidden), hiddenColor.hashCode());
+        WLabel mainSymbol = new WLabel(Component.literal("[main]"), mainColor.hashCode());
+        WLabel mainLabel = new WLabel(Component.literal(main), mainColor.hashCode());
+        WLabel hiddenSymbol = new WLabel(Component.literal("[hidden]"), hiddenColor.hashCode());
+        WLabel hiddenLabel = new WLabel(Component.literal(hidden), hiddenColor.hashCode());
 
         root.add(mainSymbol);
         root.add(mainLabel);
