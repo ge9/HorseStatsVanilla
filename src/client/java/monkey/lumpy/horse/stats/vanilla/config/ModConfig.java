@@ -13,6 +13,8 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     private boolean showMaxMin = false;
     @ConfigEntry.Gui.Tooltip
+    private boolean showPanda = true;
+    @ConfigEntry.Gui.Tooltip
     private boolean enableTooltip = true;
     private boolean valueUp = false;
     @ConfigEntry.Gui.Tooltip
@@ -55,6 +57,8 @@ public class ModConfig implements ConfigData {
     public boolean useColors() { return useColors; }
 
     public boolean showMaxMin() { return showMaxMin; }
+
+    public boolean showPanda() {  return showPanda; }
 
     public boolean valueUp() { return valueUp; }
 

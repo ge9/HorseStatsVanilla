@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.13-SNAPSHOT'
+	id 'net.fabricmc.fabric-loom' version '1.15-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -16,8 +16,25 @@ repositories {
         name = "CottonMC"
         url = "https://server.bbkr.space/artifactory/libs-release"
     }
+	// FIXME: temporary alternative for server.bbkr.space
+	maven { url 'https://jitpack.io' }
 	maven { url "https://maven.shedaniel.me/" }
 	maven { url "https://maven.terraformersmc.com/releases/" }
+}
+
+// FIXME: temporary alternative for server.bbkr.space
+configurations.all {
+	resolutionStrategy.dependencySubstitution {
+		all { DependencySubstitution dependency ->
+			if (dependency.requested instanceof ModuleComponentSelector &&
+					dependency.requested.group == "io.github.cottonmc") {
+				def targetModule = dependency.requested.module
+				def targetVersion = dependency.requested.version
+				def cleanVersion = targetVersion.contains('+') ? targetVersion.tokenize('+')[0] : targetVersion
+				dependency.useTarget("com.github.CottonMC:${targetModule}:${cleanVersion}")
+			}
+		}
+	}
 }
 
 loom {
@@ -34,13 +51,12 @@ loom {
 
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings loom.officialMojangMappings()
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	modApi "com.terraformersmc:modmenu:${project.modmenu_version}"
-	modImplementation include("io.github.cottonmc:LibGui:${project.libgui_version}")
-	modApi include ("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}")
+	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	api "com.terraformersmc:modmenu:${project.modmenu_version}"
+	implementation include("io.github.cottonmc:LibGui:${project.libgui_version}")
+	api include ("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}")
 }
 
 processResources {
@@ -52,7 +68,7 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 21
+	it.options.release = 25
 }
 
 java {
@@ -61,13 +77,13 @@ java {
 	// If you remove this line, sources will not be generated.
 	withSourcesJar()
 
-	sourceCompatibility = JavaVersion.VERSION_21
-	targetCompatibility = JavaVersion.VERSION_21
+	sourceCompatibility = JavaVersion.VERSION_25
+	targetCompatibility = JavaVersion.VERSION_25
 }
 
 jar {
 	from("LICENSE") {
-		rename { "${it}_${project.archivesBaseName}"}
+		rename { "${it}_${project.base.archivesName.get()}" }
 	}
 }
 

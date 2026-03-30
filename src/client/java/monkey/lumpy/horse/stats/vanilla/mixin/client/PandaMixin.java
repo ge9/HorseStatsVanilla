@@ -31,7 +31,7 @@ public abstract class PandaMixin {
             config = AutoConfig.getConfigHolder(ModConfig.class).getConfig();
         }
 
-        if (config.showValue() && player.isSecondaryUseActive() && (config == null || config.isTooltipEnabled())) {
+        if (config.showValue() && config.showPanda() && player.isSecondaryUseActive() && (config == null || config.isTooltipEnabled())) {
             Minecraft.getInstance().execute(() -> Minecraft.getInstance().setScreen(
                     new ToolTipGui(new TooltipPanda(this.getMainGene().getSerializedName(), this.getHiddenGene().getSerializedName()))
             ));
